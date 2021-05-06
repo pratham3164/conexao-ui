@@ -6,7 +6,8 @@
  */
 import React from "react"
 import { createStackNavigator } from "@react-navigation/stack"
-import { WelcomeScreen, DemoScreen, DemoListScreen } from "../screens"
+import { createDrawerNavigator } from "@react-navigation/drawer"
+import { HomeScreen, ViewScreen, ReadListScreen, WishListScreen } from "../screens"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -21,26 +22,43 @@ import { WelcomeScreen, DemoScreen, DemoListScreen } from "../screens"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
 export type PrimaryParamList = {
-  welcome: undefined
-  demo: undefined
-  demoList: undefined
+  home: undefined
+  view: {
+    id: number
+  }
+  // ; year: number; description: string
+  // readList: undefined
+  // demoList: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createStackNavigator<PrimaryParamList>()
 
-export function MainNavigator() {
+function StackNavigation() {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="welcome" component={WelcomeScreen} />
-      <Stack.Screen name="demo" component={DemoScreen} />
-      <Stack.Screen name="demoList" component={DemoListScreen} />
+      <Stack.Screen name="home" component={HomeScreen} />
+      <Stack.Screen name="view" component={ViewScreen} />
     </Stack.Navigator>
   )
+}
+const Drawer = createDrawerNavigator()
+
+function DrawerNavigation() {
+  return (
+    <Drawer.Navigator>
+      <Drawer.Screen name="Home" component={StackNavigation} />
+      <Drawer.Screen name="ReadList" component={ReadListScreen} />
+      <Drawer.Screen name="WishList" component={WishListScreen} />
+    </Drawer.Navigator>
+  )
+}
+export function MainNavigator() {
+  return <DrawerNavigation />
 }
 
 /**
@@ -52,5 +70,5 @@ export function MainNavigator() {
  *
  * `canExit` is used in ./app/app.tsx in the `useBackButtonHandler` hook.
  */
-const exitRoutes = ["welcome"]
+const exitRoutes = ["home"]
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)
